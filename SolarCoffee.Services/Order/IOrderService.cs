@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using SolarCoffee.Data.Models;
+using SolarCoffee.Services.Product;
 
-namespace SolarCoffee.Services.Product.Order {
+namespace SolarCoffee.Services.Order {
 	public interface IOrderService {
 		List<SalesOrder> GetOrders();
-		ServiceResponse<bool> GenerateInvoiceForOrder(SalesOrder order);
-		ServiceResponse<bool> MarkFulfilled(int id);
+		ServiceResponse<bool> GenerateNewOrder(SalesOrder order);
+		ServiceResponse<bool> MakFulfilled(int id);
 	}
 }

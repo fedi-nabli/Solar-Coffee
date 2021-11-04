@@ -9,7 +9,7 @@ using SolarCoffee.Data;
 using SolarCoffee.Services.Product;
 using SolarCoffee.Services.Product.Customer;
 using SolarCoffee.Services.Product.Inventory;
-using SolarCoffee.Services.Product.Order;
+using SolarCoffee.Services.Order;
 
 namespace SolarCoffee.Web
 {

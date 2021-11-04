@@ -1,7 +1,7 @@
 using SolarCoffee.Web.ViewModels;
 
 namespace SolarCoffee.Web.Serialization {
-	public static class ProductMapper {
+	public class ProductMapper {
 		public static ProductModel SerializeProductModel(Data.Models.Product product) {
 			return new ProductModel {
 				Id = product.Id,
