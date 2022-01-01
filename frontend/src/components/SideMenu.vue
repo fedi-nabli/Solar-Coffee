@@ -6,29 +6,29 @@
     <h1>Management Portal</h1>
     <solar-button
       id="menuInventory"
-      :link="'/inventory'"
       is-full-width
+      @button:click="goToRoute('/inventory')"
     >
       Inventory
     </solar-button>
     <solar-button
       id="menuCustomers"
-      :link="'/customer'"
       is-full-width
+      @button:click="goToRoute('/customers')"
     >
       Customers
     </solar-button>
     <solar-button
       id="menuInvoice"
-      :link="'/invoice/new'"
       is-full-width
+      @button:click="goToRoute('/invoice/new')"
     >
       New Invoice
     </solar-button>
     <solar-button
       id="menuOrders"
-      :link="'/orders'"
       is-full-width
+      @button:click="goToRoute('/orders')"
     >
       Orders
     </solar-button>
@@ -44,7 +44,11 @@ import SolarButton from "@/components/SolarButton.vue";
   components: { SolarButton },
 })
 
-export default class SideMenu extends Vue{};
+export default class SideMenu extends Vue{
+  goToRoute(route: string) {
+    this.$router.push(route)
+  }
+};
 </script>
 
 <style lang="scss" scoped>

@@ -30,8 +30,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "Vue";
-import Component from "vue-class-component";
+import { Component, Vue } from "vue-property-decorator";
 
 @Component({
   name: "SolarModal",

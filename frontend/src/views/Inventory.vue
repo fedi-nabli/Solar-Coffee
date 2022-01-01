@@ -47,11 +47,13 @@
     </table>
     <new-product-modal
       v-show="isNewProductVisible"
+      @save:product="saveNewProduct"
       @close="closeModals"
     />
     <shipment-modal
       v-show="isShipmentVisible"
       :inventory="inventory"
+      @save:shipment="saveNewShipment"
       @close="closeModals"
     />
   </div>
@@ -59,13 +61,15 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { IProductInventory } from "@/types/Product";
+import { IProduct, IProductInventory } from "@/types/Product";
+import { IShipment } from "@/types/Shipment";
 import SolarButton from "@/components/SolarButton.vue";
 import ShipmentModal from "@/components/modals/ShipmentModal.vue";
+import NewProductModal from "@/components/modals/NewProductModal.vue";
 
 @Component({
   name: "Inventory",
-  components: { SolarButton, ShipmentModal },
+  components: { SolarButton, ShipmentModal, NewProductModal },
 })
 export default class Inventory extends Vue {
   isNewProductVisible?: boolean = false;
@@ -82,10 +86,10 @@ export default class Inventory extends Vue {
         createdOn: new Date(),
         updatedOn: new Date(),
         isTaxable: true,
-        isArchived: false
+        isArchived: false,
       },
       quantityOnHand: 100,
-      idealQuantity: 100
+      idealQuantity: 100,
     },
     {
       id: 2,
@@ -97,11 +101,11 @@ export default class Inventory extends Vue {
         createdOn: new Date(),
         updatedOn: new Date(),
         isTaxable: false,
-        isArchived: false
+        isArchived: false,
       },
       quantityOnHand: 40,
-      idealQuantity: 20
-    }
+      idealQuantity: 20,
+    },
   ];
 
   closeModals() {
@@ -109,9 +113,21 @@ export default class Inventory extends Vue {
     this.isNewProductVisible = false;
   }
 
-  showNewProductModal() {}
+  showNewProductModal() {
+    this.isNewProductVisible = true;
+  }
 
-  showShipmentModal() {}
+  showShipmentModal() {
+    this.isShipmentVisible = true;
+  }
+
+  saveNewProduct(product: IProduct) {
+    console.log(product);
+  }
+
+  saveNewShipment(shipment: IShipment) {
+    console.log(shipment);
+  }
 }
 </script>
 
