@@ -25,7 +25,7 @@
     isFullWidth?: boolean;
 
     onClick() {
-      this.$emit('button:click')
+        this.$emit('button:click')
     }
   }
 </script>
