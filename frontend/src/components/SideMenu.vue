@@ -16,7 +16,7 @@
       is-full-width
       @button:click="goToRoute('/customers')"
     >
-      Customers
+      Manage Customers
     </solar-button>
     <solar-button
       id="menuInvoice"

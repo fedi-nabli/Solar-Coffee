@@ -18,30 +18,32 @@
         <th>Quantity On-hand</th>
         <th>Unit Price</th>
         <th>Taxable</th>
-        <th>Delete</th>
+        <th>Archive</th>
       </tr>
       <tr v-for="item in inventory" :key="item.id">
         <td>
           {{ item.product.name }}
         </td>
-        <td>
+        <td
+          v-bind:class="`${applyColor(
+            item.quantityOnHand,
+            item.idealQuantity
+          )}`"
+        >
           {{ item.quantityOnHand }}
         </td>
         <td>
           {{ item.product.price | price }}
         </td>
         <td>
-          <span v-if="item.product.isTaxable">
-            Yes
-          </span>
-          <span v-else>
-            No
-          </span>
+          <span v-if="item.product.isTaxable"> Yes </span>
+          <span v-else> No </span>
         </td>
         <td>
-          <div>
-            x
-          </div>
+          <div
+            class="lni lni-cross-circle product-archive"
+            @click="archiveProduct(item.product.id)"
+          ></div>
         </td>
       </tr>
     </table>
@@ -66,6 +68,11 @@ import { IShipment } from "@/types/Shipment";
 import SolarButton from "@/components/SolarButton.vue";
 import ShipmentModal from "@/components/modals/ShipmentModal.vue";
 import NewProductModal from "@/components/modals/NewProductModal.vue";
+import { InventoryService } from "@/services/inventory-service";
+import { ProductService } from "@/services/product-service";
+
+const inventoryService = new InventoryService();
+const productService = new ProductService();
 
 @Component({
   name: "Inventory",
@@ -75,38 +82,27 @@ export default class Inventory extends Vue {
   isNewProductVisible?: boolean = false;
   isShipmentVisible?: boolean = false;
 
-  inventory: IProductInventory[] = [
-    {
-      id: 1,
-      product: {
-        id: 1,
-        name: "Some Product",
-        description: "Good Stuff",
-        price: 100,
-        createdOn: new Date(),
-        updatedOn: new Date(),
-        isTaxable: true,
-        isArchived: false,
-      },
-      quantityOnHand: 100,
-      idealQuantity: 100,
-    },
-    {
-      id: 2,
-      product: {
-        id: 2,
-        name: "Another Product",
-        description: "Good Stuff",
-        price: 100,
-        createdOn: new Date(),
-        updatedOn: new Date(),
-        isTaxable: false,
-        isArchived: false,
-      },
-      quantityOnHand: 40,
-      idealQuantity: 20,
-    },
-  ];
+  inventory: IProductInventory[] = [];
+
+  applyColor(current: number, target: number) {
+    if (current <= 0) {
+      return "red";
+    } else if (Math.abs(target - current) > 8) {
+      return "yellow";
+    }
+    return "green";
+  }
+
+  async archiveProduct(productId: number) {
+    await productService.archive(productId);
+    await this.initialize();
+  }
+
+  async saveNewProduct(newProduct: IProduct) {
+    await productService.save(newProduct);
+    this.isNewProductVisible = false;
+    await this.initialize();
+  }
 
   closeModals() {
     this.isShipmentVisible = false;
@@ -121,14 +117,47 @@ export default class Inventory extends Vue {
     this.isShipmentVisible = true;
   }
 
-  saveNewProduct(product: IProduct) {
-    console.log(product);
+  async saveNewShipment(shipment: IShipment) {
+    await inventoryService.updateInventoryQuantity(shipment);
+    this.isShipmentVisible = false;
+    await this.initialize();
   }
 
-  saveNewShipment(shipment: IShipment) {
-    console.log(shipment);
+  async initialize() {
+    this.inventory = await inventoryService.getInventory();
+  }
+  async created() {
+    await this.initialize();
   }
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+@import "@/scss/global.scss";
+.green {
+  font-weight: bold;
+  color: $solar-green;
+}
+
+.yellow {
+  font-weight: bold;
+  color: $solar-yellow;
+}
+
+.red {
+  font-weight: bold;
+  color: $solar-red;
+}
+
+.inventory-actions {
+  display: flex;
+  margin-bottom: 0.8rem;
+}
+
+.product-archive {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: $solar-red;
+}
+</style>
