@@ -6,7 +6,7 @@ export default class CustomerService {
   API_URL = process.env.VUE_APP_API_URL;
 
   public async getCustomers(): Promise<ICustomer[]> {
-    const result: ICustomer[] = await axios.get(`${this.API_URL}/customers`);
+    const result: any = await axios.get(`${this.API_URL}/customers`);
     return result.data;
   }
 
